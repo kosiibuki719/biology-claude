@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>生物と遺伝子 穴埋め問題集</title>
+<style>
+  :root{
+    --bg: #f6f7f2;
+    --paper: #ffffff;
+    --ink: #22301f;
+    --moss: #4c7a4a;
+    --moss-dark: #33582f;
+    --leaf: #8fbf7a;
+    --sand: #eef1e6;
+    --correct: #3f8f4f;
+    --wrong: #c1543a;
+    --helix: #d7e3cf;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 15% 8%, rgba(143,191,122,0.18), transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(76,122,74,0.14), transparent 45%),
+      var(--bg);
+    color:var(--ink);
+    font-family: "Yu Mincho","Hiragino Mincho ProN","游明朝",serif;
+    line-height:1.8;
+    padding:0 0 80px 0;
+  }
+  header{
+    background: linear-gradient(135deg, var(--moss-dark), var(--moss) 60%, var(--leaf));
+    color:#fff;
+    padding:44px 24px 56px;
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";
+    position:absolute;
+    right:-40px; top:-40px;
+    width:220px;height:220px;
+    background: repeating-linear-gradient(45deg, rgba(255,255,255,0.10) 0 10px, transparent 10px 20px);
+    border-radius:50%;
+    transform: rotate(15deg);
+  }
+  header h1{
+    font-family:"Hiragino Sans","游ゴシック",sans-serif;
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight:800;
+    margin:0 0 8px;
+    letter-spacing:.04em;
+  }
+  header p{
+    font-family:"Hiragino Sans","游ゴシック",sans-serif;
+    margin:0;
+    opacity:.92;
+    font-size:14px;
+  }
+  .wrap{
+    max-width: 880px;
+    margin: -28px auto 0;
+    padding: 0 20px;
+  }
+  .toolbar{
+    background:var(--paper);
+    border:1px solid #e2e6da;
+    border-radius:14px;
+    padding:14px 18px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    box-shadow: 0 8px 24px rgba(40,60,30,0.07);
+    font-family:"Hiragino Sans","游ゴシック",sans-serif;
+    position:sticky;
+    top:12px;
+    z-index:50;
+  }
+  .toolbar .score{
+    margin-left:auto;
+    font-weight:700;
+    color:var(--moss-dark);
+    font-size:14px;
+  }
+  button.act{
+    font-family:"Hiragino Sans","游ゴシック",sans-serif;
+    background:var(--moss);
+    color:#fff;
+    border:none;
+    padding:9px 16px;
+    border-radius:999px;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.02em;
+    transition: transform .12s ease, background .12s ease;
+  }
+  button.act:hover{ background:var(--moss-dark); transform:translateY(-1px); }
+  button.act.secondary{
+    background:transparent;
+    color:var(--moss-dark);
+    border:1.5px solid var(--moss);
+  }
+  button.act.secondary:hover{ background:var(--sand); }
+
+  .page{
+    background:var(--paper);
+    margin-top:22px;
+    border-radius:16px;
+    border:1px solid #e6e9de;
+    box-shadow: 0 10px 30px rgba(40,60,30,0.06);
+    overflow:hidden;
+  }
+  .page-head{
+    background: linear-gradient(120deg, var(--helix), var(--sand));
+    padding:16px 22px;
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    border-bottom:2px dashed #cdd8c2;
+  }
+  .page-head .num{
+    font-family:"Hiragino Sans","游ゴシック",sans-serif;
+    font-weight:900;
+    font-size:26px;
+    color:var(--moss-dark);
+    min-width:40px;
+  }
+  .page-head h2{
+    font-family:"Hiragino Sans","游ゴシック",sans-serif;
+    margin:0;
+    font-size:19px;
+    color:var(--ink);
+  }
+  .section{
+    padding: 18px 24px 6px;
+  }
+  .section h3{
+    font-family:"Hiragino Sans","游ゴシック",sans-serif;
+    display:inline-block;
+    background:var(--moss);
+    color:#fff;
+    font-size:13px;
+    padding:3px 12px;
+    border-radius:6px;
+    margin:10px 0 12px;
+  }
+  ol.qlist{ margin:0 0 14px; padding-left: 1.4em; }
+  ol.qlist > li{ margin-bottom:14px; }
+  ul.sublist{ margin:6px 0 10px; padding-left: 1.2em; list-style:"・ "; }
+  ul.sublist > li{ margin-bottom:10px; }
+
+  .blank{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    margin:0 2px;
+  }
+  .blank .tag{
+    font-size:11px;
+    color:var(--moss-dark);
+    font-family:"Hiragino Sans","游ゴシック",sans-serif;
+    font-weight:700;
+  }
+  input.ans{
+    font-family:"Hiragino Sans","游ゴシック",sans-serif;
+    border:none;
+    border-bottom:2px solid var(--moss);
+    background:var(--sand);
+    padding:3px 8px;
+    font-size:14px;
+    min-width:80px;
+    max-width:220px;
+    width:auto;
+    border-radius:4px 4px 0 0;
+    color:var(--ink);
+    text-align:center;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  input.ans:focus{
+    outline:none;
+    background:#fff;
+    border-color: var(--moss-dark);
+  }
+  input.ans.correct{ background:#e2f3e2; border-color:var(--correct); color:var(--correct); font-weight:700; }
+  input.ans.wrong{ background:#fbe6e1; border-color:var(--wrong); color:var(--wrong); }
+  .answer-reveal{
+    font-size:12px;
+    color:var(--moss-dark);
+    font-family:"Hiragino Sans","游ゴシック",sans-serif;
+    margin-left:4px;
+    font-weight:700;
+    display:none;
+  }
+  .show-answers .answer-reveal{ display:inline; }
+  .show-answers input.ans:not(.correct):not(.wrong){ background: #f2f6ee; }
+
+  .diagram-note{
+    font-family:"Hiragino Sans","游ゴシック",sans-serif;
+    font-size:12.5px;
+    background: var(--sand);
+    border-left:4px solid var(--leaf);
+    padding:10px 14px;
+    border-radius:6px;
+    margin: 4px 0 16px;
+    color:#4a5a44;
+  }
+  .codon-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12.5px;
+    margin: 10px 0 20px;
+  }
+  .codon-table th, .codon-table td{
+    border:1px solid #d7ded0;
+    padding:5px 6px;
+    text-align:center;
+  }
+  .codon-table th{ background:var(--sand); font-family:"Hiragino Sans","游ゴシック",sans-serif; }
+
+  footer{
+    text-align:center;
+    font-family:"Hiragino Sans","游ゴシック",sans-serif;
+    font-size:12px;
+    color:#7a8a72;
+    margin-top:30px;
+  }
+
+  @media (max-width:600px){
+    header{padding:34px 16px 46px;}
+    .section{padding:14px 16px 4px;}
+    input.ans{min-width:60px; font-size:13px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧬 生物と遺伝子・遺伝情報とタンパク質 穴埋め問題集</h1>
+  <p>教科書 p.46〜73 対応（要点整理 8〜14）｜空欄に語句を入力して「採点する」を押してください</p>
+</header>
+
+<div class="wrap">
+  <div class="toolbar">
+    <button class="act" onclick="checkAll()">採点する</button>
+    <button class="act secondary" onclick="revealAll()">答えを表示</button>
+    <button class="act secondary" onclick="resetAll()">リセット</button>
+    <span class="score" id="scoreBox"></span>
+  </div>
+
+  <!-- PAGE 8 -->
+  <div class="page">
+    <div class="page-head"><span class="num">8</span><h2>生物と遺伝子</h2></div>
+
+    <div class="section">
+      <h3>1　生物の遺伝情報（教 p.46〜47）</h3>
+      <ol class="qlist">
+        <li>① 生物の形や性質などの特徴を<span class="blank">(<span class="tag">a</span><input class="ans" data-a="形質">)</span>といい、親の(a)が子や孫に伝わることを<span class="blank">(<span class="tag">b</span><input class="ans" data-a="遺伝">)</span>という。</li>
+        <li>② (b)によって親から子に伝わる情報を<span class="blank">(<span class="tag">c</span><input class="ans" data-a="遺伝情報">)</span>といい、それを担うものが<span class="blank">(<span class="tag">d</span><input class="ans" data-a="遺伝子">)</span>である。</li>
+        <li>③ (d)あるいは(c)の本体は、<span class="blank">(<span class="tag">e</span><input class="ans" data-a="DNA">)</span>だということが1950年代に明らかにされた。</li>
+        <li>④ 生物の(c)が約<span class="blank">(<span class="tag">f</span><input class="ans" data-a="40">)</span>億年もの膨大な時間の間に<span class="blank">(<span class="tag">g</span><input class="ans" data-a="変化,進化">)</span>して、多様な生物が地球上に生まれた。</li>
+        <li>⑤ 同じ種の親と子、例えばイヌの親と子は似ているが、全く同じ色や模様にはならない。これは、<span class="blank">(<span class="tag">h</span><input class="ans" data-a="父親,母親">)</span>と<span class="blank">(<span class="tag">i</span><input class="ans" data-a="母親,父親">)</span>の(c)にわずかな違いがあり、ある(a)は(h)から、別の(a)は(i)からというように、それぞれの(a)が別々に伝わったためである。</li>
+      </ol>
+
+      <h3>2　DNAと染色体（教 p.46〜47）</h3>
+      <ol class="qlist">
+        <li>① 遺伝子の本体である<span class="blank">(<span class="tag">a</span><input class="ans" data-a="DNA">)</span>は、真核生物のヒトでは直径約10μmの細胞小器官である<span class="blank">(<span class="tag">b</span><input class="ans" data-a="核">)</span>の中に含まれる<span class="blank">(<span class="tag">c</span><input class="ans" data-a="染色体">)</span>の成分として存在している。</li>
+        <li>② ヒトの体細胞では<span class="blank">(<span class="tag">d</span><input class="ans" data-a="46">)</span>本の(c)があり、その中にそれぞれ(a)が含まれている。</li>
+        <li>③ 通常、(c)は細い糸状で(b)の中に広がっているため、<span class="blank">(<span class="tag">e</span><input class="ans" data-a="光学">)</span>顕微鏡では観察ができない。しかし、細胞が<span class="blank">(<span class="tag">f</span><input class="ans" data-a="分裂">)</span>するときには、(c)が<span class="blank">(<span class="tag">g</span><input class="ans" data-a="凝縮">)</span>して、(e)顕微鏡でも観察ができるほど太くなる。</li>
+      </ol>
+
+      <h3>3　遺伝情報の名称（教 p.48）</h3>
+      <ol class="qlist">
+        <li>① 生物は、それぞれの個体の形成、維持、<span class="blank">(<span class="tag">a</span><input class="ans" data-a="生殖">)</span>などの生命活動に必要なすべての遺伝情報を含んだDNAをもっている。そのようなDNAの1組を<span class="blank">(<span class="tag">b</span><input class="ans" data-a="ゲノム">)</span>という。</li>
+        <li>② 真核生物の体細胞には、同じ大きさと<span class="blank">(<span class="tag">c</span><input class="ans" data-a="形">)</span>の染色体が1対ずつある。対になっている2つの染色体を<span class="blank">(<span class="tag">d</span><input class="ans" data-a="相同染色体">)</span>という。</li>
+      </ol>
+
+      <h3>4　遺伝物質の解明の歴史（教 p.49）</h3>
+      <ol class="qlist">
+        <li>① イギリスの<span class="blank">(<span class="tag">a</span><input class="ans" data-a="グリフィス">)</span>は、肺炎双球菌のうち、病原性をもつ<span class="blank">(<span class="tag">b</span><input class="ans" data-a="S">)</span>型菌と、病原性をもたない<span class="blank">(<span class="tag">c</span><input class="ans" data-a="R">)</span>型菌を用いた実験を行い、<span class="blank">(<span class="tag">d</span><input class="ans" data-a="形質転換">)</span>という現象を見いだした。</li>
+        <li>② アメリカの<span class="blank">(<span class="tag">e</span><input class="ans" data-a="エイブリー">)</span>らは、肺炎双球菌の(b)型菌と(c)型菌、<span class="blank">(<span class="tag">f</span><input class="ans" data-a="タンパク質">)</span>分解酵素、<span class="blank">(<span class="tag">g</span><input class="ans" data-a="DNA">)</span>分解酵素などを用いた実験により、(g)が遺伝物質であることを示唆した。</li>
+        <li>③ 細菌に感染するウイルスである<span class="blank">(<span class="tag">h</span><input class="ans" data-a="バクテリオファージ">)</span>は、(f)と(g)からできている。アメリカの<span class="blank">(<span class="tag">i</span><input class="ans" data-a="ハーシー,チェイス">)</span>と<span class="blank">(<span class="tag">j</span><input class="ans" data-a="チェイス,ハーシー">)</span>は、(h)を用いた実験により、遺伝子の本体は(f)ではなく(g)であることを解明した。</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- PAGE 9 -->
+  <div class="page">
+    <div class="page-head"><span class="num">9</span><h2>DNAの構造</h2></div>
+
+    <div class="section">
+      <h3>1　DNAを構成する塩基（教 p.50, 52）</h3>
+      <ol class="qlist">
+        <li>① DNAを構成する塩基である<span class="blank">(<span class="tag">a</span><input class="ans" data-a="アデニン">)</span>、<span class="blank">(<span class="tag">b</span><input class="ans" data-a="チミン">)</span>、<span class="blank">(<span class="tag">c</span><input class="ans" data-a="グアニン">)</span>、<span class="blank">(<span class="tag">d</span><input class="ans" data-a="シトシン">)</span>はそれぞれA, T, G, Cと略され、Aと<span class="blank">(<span class="tag">e</span><input class="ans" data-a="T,チミン">)</span>、Gと<span class="blank">(<span class="tag">f</span><input class="ans" data-a="C,シトシン">)</span>の割合は、生物の種によらずほぼ等しい。</li>
+        <li>② ①のようになっていることは<span class="blank">(<span class="tag">g</span><input class="ans" data-a="シャルガフ">)</span>の規則と呼ばれ、DNAの構造を知る手がかりの1つとなった。</li>
+        <li>③ (g)の規則は、塩基のAは塩基の(e)と結合し、塩基のGは塩基の(f)と結合する性質によるものであり、DNA分子の中で、特定の2つの塩基どうしが結合しやすい性質を<span class="blank">(<span class="tag">h</span><input class="ans" data-a="相補性">)</span>という。</li>
+        <li>④ Aと(e)、Gと(f)のような塩基どうしの対を<span class="blank">(<span class="tag">i</span><input class="ans" data-a="塩基対">)</span>という。</li>
+      </ol>
+
+      <h3>2　DNAの構造（教 p.52〜53）</h3>
+      <ol class="qlist">
+        <li>① 1952年、ウィルキンスらが行った研究の結果、DNAは基本構造が規則的に並んでできた鎖が<span class="blank">(<span class="tag">a</span><input class="ans" data-a="らせん">)</span>状になった構造をしていることが推察された。</li>
+        <li>② 1953年に<span class="blank">(<span class="tag">b</span><input class="ans" data-a="ワトソン,クリック">)</span>と<span class="blank">(<span class="tag">c</span><input class="ans" data-a="クリック,ワトソン">)</span>は、DNAが<span class="blank">(<span class="tag">d</span><input class="ans" data-a="二重らせん">)</span>構造であることを科学雑誌「Nature」に発表した。</li>
+        <li>③ ②の研究により、(b)と(c)は、ウィルキンスとともにノーベル<span class="blank">(<span class="tag">e</span><input class="ans" data-a="生理学・医学">)</span>賞を受賞した（1962年）。</li>
+        <li>④ DNAは、<span class="blank">(<span class="tag">f</span><input class="ans" data-a="リン酸">)</span>、<span class="blank">(<span class="tag">g</span><input class="ans" data-a="糖">)</span>、<span class="blank">(<span class="tag">h</span><input class="ans" data-a="塩基">)</span>からなる<span class="blank">(<span class="tag">i</span><input class="ans" data-a="ヌクレオチド">)</span>という物質がつながって構成されている。</li>
+        <li>⑤ 多数の(i)が規則的につながって、(f)と(g)が交互に並んだ鎖ができ、2本の鎖の(i)から互いに向き合うように配置された(h)が<span class="blank">(<span class="tag">j</span><input class="ans" data-a="水素結合">)</span>をつくって(d)構造ができるのである。DNAの(d)構造は、例えて言えば、2本の鎖を平行に並べてはしご状とし、それをねじって(a)状にしたような構造である。</li>
+      </ol>
+
+      <h3>3　塩基の並び方（教 p.54）</h3>
+      <ol class="qlist">
+        <li>① DNAの鎖の骨格部分は、<span class="blank">(<span class="tag">a</span><input class="ans" data-a="デオキシリボース">)</span>と呼ばれる糖と<span class="blank">(<span class="tag">b</span><input class="ans" data-a="リン酸">)</span>が交互に繰り返しているのに対して、塩基はA, T, G, Cの4種類があり、塩基の並び方が遺伝情報の<span class="blank">(<span class="tag">c</span><input class="ans" data-a="暗号">)</span>として使われている。</li>
+        <li>② DNAの塩基の並び方を<span class="blank">(<span class="tag">d</span><input class="ans" data-a="塩基配列">)</span>といい、4種類の塩基には<span class="blank">(<span class="tag">e</span><input class="ans" data-a="相補性">)</span>があるために、一方の鎖の(d)が決まれば、もう一方の鎖の(d)は必ず1つに決まる。</li>
+        <li>③ 糖、(b)、塩基からなるDNAの基本構造は生物に<span class="blank">(<span class="tag">f</span><input class="ans" data-a="共通">)</span>しているが、DNAに含まれる(d)や塩基対の<span class="blank">(<span class="tag">g</span><input class="ans" data-a="数">)</span>（ゲノムサイズ）は生物の種ごとに異なっている。</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- PAGE 10 -->
+  <div class="page">
+    <div class="page-head"><span class="num">10</span><h2>DNAの複製と分配</h2></div>
+
+    <div class="section">
+      <h3>1　DNAが複製されるしくみ（教 p.57）</h3>
+      <ol class="qlist">
+        <li>① <span class="blank">(<span class="tag">a</span><input class="ans" data-a="細胞分裂">)</span>が起こるとき、<span class="blank">(<span class="tag">b</span><input class="ans" data-a="娘">)</span>細胞にDNAが分配される前に、<span class="blank">(<span class="tag">c</span><input class="ans" data-a="母">)</span>細胞の染色体の中にあるDNAは2倍になる。</li>
+        <li>② ①のように、もとのDNAと同じ<span class="blank">(<span class="tag">d</span><input class="ans" data-a="塩基配列">)</span>をもつDNAが合成されることを<span class="blank">(<span class="tag">e</span><input class="ans" data-a="複製">)</span>という。</li>
+        <li>③ DNAが(e)されるときには、DNAを構成する2本の鎖が1本ずつに分離し、それぞれの鎖で塩基の<span class="blank">(<span class="tag">f</span><input class="ans" data-a="相補性">)</span>に従って、新しい鎖が合成される。</li>
+        <li>④ ③のとき、もとのDNA鎖は<span class="blank">(<span class="tag">g</span><input class="ans" data-a="鋳型">)</span>となるので、(g)鎖とも呼ばれる。</li>
+        <li>⑤ ③のようなDNAの(e)のしかたを、<span class="blank">(<span class="tag">h</span><input class="ans" data-a="半保存的複製">)</span>という。</li>
+      </ol>
+
+      <h3>2　細胞の分裂とDNA（教 p.58）</h3>
+      <ol class="qlist">
+        <li>① 細胞はDNAの<span class="blank">(<span class="tag">a</span><input class="ans" data-a="複製">)</span>と、細胞の分裂を繰り返しながら増殖している。細胞の分裂が終了してから再び次の分裂が終了するまでの過程を<span class="blank">(<span class="tag">b</span><input class="ans" data-a="細胞周期">)</span>という。</li>
+        <li>
+          ② DNAの(a)は、分裂と分裂の間の<span class="blank">(<span class="tag">c</span><input class="ans" data-a="間期">)</span>に行われ、(c)は次の3つの段階に分けられる。
+          <ul class="sublist">
+            <li><span class="blank">(<span class="tag">d</span><input class="ans" data-a="G1">)</span>期（<span class="blank">(<span class="tag">e</span><input class="ans" data-a="ギャップ1">)</span>期）：下図の時期では<span class="blank">(<span class="tag">f</span><input class="ans" data-a="①">)</span>期に相当し、DNAの構成単位である<span class="blank">(<span class="tag">g</span><input class="ans" data-a="ヌクレオチド">)</span>などの合成の準備が行われる。</li>
+            <li><span class="blank">(<span class="tag">h</span><input class="ans" data-a="S">)</span>期（DNA合成期）：下図の時期では<span class="blank">(<span class="tag">i</span><input class="ans" data-a="②">)</span>期に相当し、DNAが複製される。</li>
+            <li><span class="blank">(<span class="tag">j</span><input class="ans" data-a="G2">)</span>期（<span class="blank">(<span class="tag">k</span><input class="ans" data-a="ギャップ2">)</span>期）：下図の時期では<span class="blank">(<span class="tag">l</span><input class="ans" data-a="③">)</span>期に相当し、細胞分裂の準備が行われる。</li>
+          </ul>
+        </li>
+        <li>
+          ③ 細胞の分裂が行われる分裂期（<span class="blank">(<span class="tag">m</span><input class="ans" data-a="M">)</span>期）は、下図の時期では<span class="blank">(<span class="tag">n</span><input class="ans" data-a="④">)</span>期に相当し、染色体のようすによって次の4段階に分けられる。
+          <ul class="sublist">
+            <li><span class="blank">(<span class="tag">o</span><input class="ans" data-a="前">)</span>期：核の中に細長い染色体が現れる。</li>
+            <li><span class="blank">(<span class="tag">p</span><input class="ans" data-a="中">)</span>期：染色体が細胞の中央付近（<span class="blank">(<span class="tag">q</span><input class="ans" data-a="赤道面">)</span>）に並ぶ。</li>
+            <li><span class="blank">(<span class="tag">r</span><input class="ans" data-a="後">)</span>期：染色体が細胞の両端（両極）に移動する。</li>
+            <li><span class="blank">(<span class="tag">s</span><input class="ans" data-a="終">)</span>期：<span class="blank">(<span class="tag">t</span><input class="ans" data-a="細胞質">)</span>の分裂が起こる。</li>
+          </ul>
+        </li>
+      </ol>
+      <div class="diagram-note">下図：細胞あたりのDNA量（相対値）の変化グラフ。DNA量は①期=2 → ②期に2から4へ増加 → ③期=4を維持 → ④期の途中で4から2へ半減 → 次の①期=2、という周期を示す。</div>
+    </div>
+  </div>
+
+  <!-- PAGE 11 -->
+  <div class="page">
+    <div class="page-head"><span class="num">11</span><h2>タンパク質と遺伝情報①（タンパク質と核酸）</h2></div>
+
+    <div class="section">
+      <h3>1　栄養素としてのタンパク質（教 p.62〜63）</h3>
+      <ol class="qlist">
+        <li>① 私たちは、食事によって生命活動に必要な栄養素を摂取している。特に<span class="blank">(<span class="tag">a</span><input class="ans" data-a="炭水化物">)</span>・<span class="blank">(<span class="tag">b</span><input class="ans" data-a="脂質">)</span>・タンパク質・無機質・<span class="blank">(<span class="tag">c</span><input class="ans" data-a="ビタミン">)</span>は五大栄養素と呼ばれる。</li>
+        <li>② 五大栄養素のうち、筋肉や臓器、血液などをつくるもとになるタンパク質は、さまざまな<span class="blank">(<span class="tag">d</span><input class="ans" data-a="アミノ酸">)</span>が一定の順序で並び、鎖状につながってできている。このような(d)の並び方を<span class="blank">(<span class="tag">e</span><input class="ans" data-a="アミノ酸配列">)</span>という。</li>
+        <li>③ 例えば、筋肉に含まれる<span class="blank">(<span class="tag">f</span><input class="ans" data-a="アクチン">)</span>というタンパク質は、375個の(d)が、一定の順序に並んで鎖状につながってできている。</li>
+      </ol>
+
+      <h3>2　生命活動とタンパク質（教 p.63）</h3>
+      <ol class="qlist">
+        <li>① 私たちの体を構成する細胞を分析すると、質量の割合で<span class="blank">(<span class="tag">a</span><input class="ans" data-a="水">)</span>が65%、タンパク質が15%、残りの約20%が<span class="blank">(<span class="tag">b</span><input class="ans" data-a="脂質">)</span>、<span class="blank">(<span class="tag">c</span><input class="ans" data-a="糖質,炭水化物">)</span>、無機質などであることがわかる。</li>
+        <li>② なかでも、タンパク質は(a)を除くと原形質中で約<span class="blank">(<span class="tag">d</span><input class="ans" data-a="半分,50">)</span>%を占めている。</li>
+        <li>③ タンパク質は、生体を構成する物質のなかで最も種類が多く、ヒトの体には約<span class="blank">(<span class="tag">e</span><input class="ans" data-a="10万">)</span>種類以上あるといわれている。</li>
+        <li>④ タンパク質は、私たちの体を構成する材料になったり、生体内の触媒である<span class="blank">(<span class="tag">f</span><input class="ans" data-a="酵素">)</span>としてはたらいたりと、非常に多様な役割を担っている。</li>
+      </ol>
+
+      <h3>3　DNAとRNA（教 p.64, 67）</h3>
+      <ol class="qlist">
+        <li>① 生物は、それぞれの生命活動に必要なすべての<span class="blank">(<span class="tag">a</span><input class="ans" data-a="遺伝情報">)</span>を含むDNAをもっていて、生命活動を支える多種多様なタンパク質も、その生物のDNAに基づいて合成される。</li>
+        <li>② タンパク質は、多数の<span class="blank">(<span class="tag">b</span><input class="ans" data-a="アミノ酸">)</span>が一定の順序で並んで、鎖状になった物質である。このようなタンパク質が合成されるとき、(b)の並び方は、DNAの<span class="blank">(<span class="tag">c</span><input class="ans" data-a="4">)</span>種類しかない塩基で決められている。</li>
+        <li>③ タンパク質合成の過程においては、DNAのほかに、RNAという分子が重要な役割を果たしている。RNAは、DNAと同じように<span class="blank">(<span class="tag">d</span><input class="ans" data-a="ヌクレオチド">)</span>が多数つながってできているが、DNAとは異なる物質である。</li>
+        <li>④ DNAに含まれる糖は<span class="blank">(<span class="tag">e</span><input class="ans" data-a="デオキシリボース">)</span>であるが、RNAに含まれる糖は<span class="blank">(<span class="tag">f</span><input class="ans" data-a="リボース">)</span>である。</li>
+        <li>⑤ RNAの塩基のうち、<span class="blank">(<span class="tag">g</span><input class="ans" data-a="アデニン">)</span>、<span class="blank">(<span class="tag">h</span><input class="ans" data-a="グアニン">)</span>、<span class="blank">(<span class="tag">i</span><input class="ans" data-a="シトシン">)</span>はDNAと共通であるが、RNAには<span class="blank">(<span class="tag">j</span><input class="ans" data-a="チミン">)</span>ではなく<span class="blank">(<span class="tag">k</span><input class="ans" data-a="ウラシル">)</span>が含まれる。</li>
+        <li>⑥ さらに、DNAは<span class="blank">(<span class="tag">l</span><input class="ans" data-a="2">)</span>本鎖であるのに対し、RNAは<span class="blank">(<span class="tag">m</span><input class="ans" data-a="1">)</span>本鎖である。</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- PAGE 12 -->
+  <div class="page">
+    <div class="page-head"><span class="num">12</span><h2>タンパク質と遺伝情報②（遺伝子の発現）</h2></div>
+
+    <div class="section">
+      <h3>1　DNAからタンパク質へ（教 p.64, 66）</h3>
+      <ol class="qlist">
+        <li>① DNAの<span class="blank">(<span class="tag">a</span><input class="ans" data-a="塩基">)</span>配列は、最終的にはタンパク質の<span class="blank">(<span class="tag">b</span><input class="ans" data-a="アミノ酸">)</span>配列に変換される。その変換過程は以下のとおりである。</li>
+        <li>② まず、DNAの(a)配列は、<span class="blank">(<span class="tag">c</span><input class="ans" data-a="核酸">)</span>の一種である<span class="blank">(<span class="tag">d</span><input class="ans" data-a="RNA">)</span>という分子に写し取られる。この過程を<span class="blank">(<span class="tag">e</span><input class="ans" data-a="転写">)</span>という。</li>
+        <li>③ 次に、(d)の(a)配列は、タンパク質の(b)配列に変換される。(d)に写し取られた(a)配列の並び方は、(a)を指定する<span class="blank">(<span class="tag">f</span><input class="ans" data-a="暗号">)</span>となっている。(d)の(a)配列に従って、(f)で指定される(b)が次々に<span class="blank">(<span class="tag">g</span><input class="ans" data-a="結合">)</span>されて、<span class="blank">(<span class="tag">h</span><input class="ans" data-a="3個">)</span>ごとに決まった(b)をもつタンパク質が合成される。この過程を<span class="blank">(<span class="tag">i</span><input class="ans" data-a="翻訳">)</span>という。</li>
+        <li>④ このように<span class="blank">(<span class="tag">j</span><input class="ans" data-a="遺伝情報">)</span>は、DNA→(c)→タンパク質へと一方向に伝えられるという原則がある。この原則は、1958年に<span class="blank">(<span class="tag">k</span><input class="ans" data-a="クリック">)</span>によって提唱され、<span class="blank">(<span class="tag">l</span><input class="ans" data-a="セントラルドグマ">)</span>と呼ばれている。また、一般に、DNAの(j)からタンパク質が合成されることを、遺伝子が<span class="blank">(<span class="tag">m</span><input class="ans" data-a="発現">)</span>するという。</li>
+      </ol>
+      <div class="diagram-note">図：DNA →（転写）→ RNA →（翻訳）→ タンパク質</div>
+
+      <h3>2　転写と翻訳（教 p.66, 68）</h3>
+      <ol class="qlist">
+        <li>① <span class="blank">(<span class="tag">a</span><input class="ans" data-a="遺伝子">)</span>の発現は、転写→翻訳の順に起こる。転写と翻訳の過程は次のように進行する。</li>
+        <li>② DNAから、(a)の領域の<span class="blank">(<span class="tag">b</span><input class="ans" data-a="塩基">)</span>配列がmRNA（<span class="blank">(<span class="tag">c</span><input class="ans" data-a="メッセンジャーRNA">)</span>と読む）に写し取られる。この転写の過程は何度も繰り返されるので、通常、1つの(a)から複数のmRNAがつくられる。</li>
+        <li>③ mRNAに写し取られた(b)配列は、連続した<span class="blank">(<span class="tag">d</span><input class="ans" data-a="3">)</span>個の(b)の配列が<span class="blank">(<span class="tag">e</span><input class="ans" data-a="1">)</span>個のアミノ酸を指定し、その次の連続した(d)つの(b)の配列が次のアミノ酸を指定する。mRNAによって指定されたアミノ酸は、<span class="blank">(<span class="tag">f</span><input class="ans" data-a="tRNA">)</span>という分子（<span class="blank">(<span class="tag">g</span><input class="ans" data-a="トランスファーRNA">)</span>と読む）によって運ばれる。このようにして、mRNAの(b)配列がアミノ酸の配列に翻訳される。</li>
+        <li>④ <span class="blank">(<span class="tag">h</span><input class="ans" data-a="リボソーム">)</span>には、食物から吸収されたアミノ酸が多量に含まれており、mRNAの(b)配列に従って、アミノ酸が次々に結合し、<span class="blank">(<span class="tag">i</span><input class="ans" data-a="タンパク質">)</span>が合成される。この過程は、転写によってつくられた複数のmRNAで、並行して起こるので、一度に多量の(i)を合成することができる。</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- PAGE 13 -->
+  <div class="page">
+    <div class="page-head"><span class="num">13</span><h2>遺伝暗号表</h2></div>
+
+    <div class="section">
+      <h3>1　遺伝暗号表（教 p.69）</h3>
+      <ol class="qlist">
+        <li>① タンパク質のアミノ酸配列を直接指定しているのは、<span class="blank">(<span class="tag">a</span><input class="ans" data-a="mRNA">)</span>の塩基配列である。</li>
+        <li>② 生体内のタンパク質に含まれるアミノ酸は<span class="blank">(<span class="tag">b</span><input class="ans" data-a="20">)</span>種類存在するが、(a)に含まれる塩基は4種類のみである。</li>
+        <li>③ 4種類の塩基を使い、連続した3つの塩基配列で1個のアミノ酸を指定するのであれば、全部で<span class="blank">(<span class="tag">c</span><input class="ans" data-a="64">)</span>通りであるから十分な数である。この連続した塩基3個を<span class="blank">(<span class="tag">d</span><input class="ans" data-a="コドン">)</span>という。これらが(b)種類のアミノ酸に対応している。</li>
+        <li>④ 1960年ごろ、多くの研究者によって、それぞれの(d)がどのアミノ酸を指定するかが突き止められ、遺伝暗号表（下表）にまとめられた。遺伝暗号表では、(d)が(a)の塩基配列で表示され、それぞれの(d)を<span class="blank">(<span class="tag">e</span><input class="ans" data-a="トリプレット">)</span>（遺伝暗号の単位）という。(e)に対応する相補的な(d)を<span class="blank">(<span class="tag">f</span><input class="ans" data-a="アンチコドン">)</span>という。</li>
+        <li>⑤ 例えば、塩基配列の1番目が<span class="blank">(<span class="tag">g</span><input class="ans" data-a="U">)</span>、2番目が<span class="blank">(<span class="tag">h</span><input class="ans" data-a="G">)</span>、3番目が<span class="blank">(<span class="tag">i</span><input class="ans" data-a="C">)</span>であるUGCの(e)には、<span class="blank">(<span class="tag">j</span><input class="ans" data-a="システイン">)</span>というアミノ酸が対応する。</li>
+        <li>⑥ (c)個の(e)のうち、UAA, UAG, UGAは、どのアミノ酸にも対応しておらず、そこで翻訳が終了するため、<span class="blank">(<span class="tag">k</span><input class="ans" data-a="終止コドン">)</span>という。</li>
+        <li>⑦ 翻訳の開始にはAUGが対応しており、<span class="blank">(<span class="tag">l</span><input class="ans" data-a="開始コドン">)</span>という。これは同時にメチオニン（Met）というアミノ酸を指定する(e)でもある。</li>
+      </ol>
+
+      <table class="codon-table">
+        <caption style="font-family:'Hiragino Sans',sans-serif;font-size:12px;text-align:left;margin-bottom:6px;color:#4a5a44;">遺伝暗号表（抜粋の確認用）</caption>
+        <tr><th></th><th>U</th><th>C</th><th>A</th><th>G</th></tr>
+        <tr><td>U</td><td>UUU/UUC フェニルアラニン(Phe)<br>UUA/UUG ロイシン(Leu)</td><td>UCU〜UCG セリン(Ser)</td><td>UAU/UAC チロシン(Tyr)<br>UAA/UAG (k 終止コドン)</td><td>UGU/UGC システイン(Cys)<br>UGA (k 終止コドン)／UGG トリプトファン(Trp)</td></tr>
+        <tr><td>C</td><td>CUU〜CUG ロイシン(Leu)</td><td>CCU〜CCG プロリン(Pro)</td><td>CAU/CAC ヒスチジン(His)<br>CAA/CAG グルタミン(Gln)</td><td>CGU〜CGG アルギニン(Arg)</td></tr>
+        <tr><td>A</td><td>AUU/AUC/AUA イソロイシン(Ile)<br>AUG (i メチオニン Met・開始コドン)</td><td>ACU〜ACG トレオニン(Thr)</td><td>AAU/AAC アスパラギン(Asn)<br>AAA/AAG リシン(Lys)</td><td>AGU/AGC セリン(Ser)<br>AGA/AGG アルギニン(Arg)</td></tr>
+        <tr><td>G</td><td>GUU〜GUG バリン(Val)</td><td>GCU〜GCG アラニン(Ala)</td><td>GAU/GAC アスパラギン酸(Asp)<br>GAA/GAG グルタミン酸(Glu)</td><td>GGU〜GGG グリシン(Gly)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- PAGE 14 -->
+  <div class="page">
+    <div class="page-head"><span class="num">14</span><h2>細胞の分化と遺伝子</h2></div>
+
+    <div class="section">
+      <h3>1　細胞の分化（教 p.73）</h3>
+      <ol class="qlist">
+        <li>① 私たちの体を構成する細胞は、筋細胞、皮膚の細胞、眼の水晶体の細胞など、それぞれ異なった形と<span class="blank">(<span class="tag">a</span><input class="ans" data-a="働き,機能">)</span>をもっている。</li>
+        <li>② 個体内のそれぞれの細胞は、<span class="blank">(<span class="tag">b</span><input class="ans" data-a="受精卵">)</span>と呼ばれる1個の細胞が細胞分裂を繰り返して生じたものなので、(b)と<span class="blank">(<span class="tag">c</span><input class="ans" data-a="同じ">)</span>の遺伝情報をもつが、形や(a)は(c)ではない。</li>
+        <li>③ ①のように、細胞が特定の形や(a)をもつように変化することを<span class="blank">(<span class="tag">d</span><input class="ans" data-a="分化">)</span>という。</li>
+      </ol>
+
+      <h3>2　遺伝子の発現（教 p.66, 73）</h3>
+      <ol class="qlist">
+        <li>① DNAの遺伝情報をもとにしてタンパク質が<span class="blank">(<span class="tag">a</span><input class="ans" data-a="合成">)</span>されることを、遺伝子が<span class="blank">(<span class="tag">b</span><input class="ans" data-a="発現">)</span>する（遺伝子の発現）という。</li>
+        <li>② 遺伝子の(b)では、まずDNAの<span class="blank">(<span class="tag">c</span><input class="ans" data-a="塩基">)</span>配列が、<span class="blank">(<span class="tag">d</span><input class="ans" data-a="RNA">)</span>という分子に写し取られる過程、つまり<span class="blank">(<span class="tag">e</span><input class="ans" data-a="転写">)</span>が起こり、次に(d)の(c)がタンパク質の<span class="blank">(<span class="tag">f</span><input class="ans" data-a="アミノ酸">)</span>配列に変換される過程、つまり<span class="blank">(<span class="tag">g</span><input class="ans" data-a="翻訳">)</span>が起こる（下図参照）。</li>
+        <li>③ ②のように、遺伝子の(b)は、DNAに保存された遺伝情報が、DNA→<span class="blank">(<span class="tag">h</span><input class="ans" data-a="RNA">)</span>→タンパク質と一方向に流れるという原則に従って起こる。この原則は<span class="blank">(<span class="tag">i</span><input class="ans" data-a="セントラルドグマ">)</span>と呼ばれている。</li>
+        <li>④ <span class="blank">(<span class="tag">j</span><input class="ans" data-a="核">)</span>内にある全遺伝子は常に(b)しているわけではない。遺伝子のなかには、必要とされるときにのみ(b)するものや、特定の(j)だけで(b)するものも少なくない。</li>
+        <li>⑤ 例えば、<span class="blank">(<span class="tag">k</span><input class="ans" data-a="ヘモグロビン">)</span>遺伝子は、赤血球になる(j)で(b)している。一方、筋肉の(j)では、<span class="blank">(<span class="tag">l</span><input class="ans" data-a="アクチン,ミオシン">)</span>遺伝子が(b)しているが、(k)遺伝子は(b)していない。</li>
+        <li>⑥ つまり、すべての(j)は、全く<span class="blank">(<span class="tag">m</span><input class="ans" data-a="同じ">)</span>遺伝情報をもっているが、それぞれの(j)で(b)する遺伝子は、(m)ではない。これは、それぞれの(j)の遺伝情報のなかから、その(j)で必要とされる遺伝子のみが(b)している、ということを示している。</li>
+      </ol>
+      <div class="diagram-note">図：DNA（(c)配列）→ RNA（(d)の(c)配列）→ タンパク質（(f)配列）　※(e)＝転写／(g)＝翻訳／(h)＝RNA／(i)＝mRNA</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>教科書 p.46〜73／要点整理 8〜14 準拠　学習用に作成</footer>
+
+<script>
+function normalize(s){
+  return (s||"").trim()
+    .replace(/[Ａ-Ｚａ-ｚ０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))
+    .toUpperCase();
+}
+function checkAll(){
+  const inputs = document.querySelectorAll('input.ans');
+  let correct = 0;
+  inputs.forEach(inp=>{
+    const accepted = inp.dataset.a.split(',').map(normalize);
+    const val = normalize(inp.value);
+    inp.classList.remove('correct','wrong');
+    if(val.length === 0){ return; }
+    if(accepted.includes(val)){
+      inp.classList.add('correct');
+      correct++;
+    } else {
+      inp.classList.add('wrong');
+    }
+  });
+  document.getElementById('scoreBox').textContent = `正解: ${correct} / ${inputs.length}`;
+}
+function revealAll(){
+  document.querySelectorAll('input.ans').forEach(inp=>{
+    inp.value = inp.dataset.a.split(',')[0];
+    inp.classList.remove('wrong');
+    inp.classList.add('correct');
+  });
+  document.getElementById('scoreBox').textContent = '';
+}
+function resetAll(){
+  document.querySelectorAll('input.ans').forEach(inp=>{
+    inp.value = '';
+    inp.classList.remove('correct','wrong');
+  });
+  document.getElementById('scoreBox').textContent = '';
+}
+</script>
+</body>
+</html>
